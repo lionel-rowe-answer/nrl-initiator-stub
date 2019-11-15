@@ -1,0 +1,5 @@
+{
+    "collectionPath": "./SSP_Read_Tests.json",
+    "htmlReportTemplatePath":"./lib/postman-report-template.html",
+    "htmlReportExportPath":"./reports/%ods-%asid-nrl-retrieval-report-%dt.html"
+}

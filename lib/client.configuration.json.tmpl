@@ -1,0 +1,27 @@
+{
+    "successEndpoint": "https://nrls.digital.nhs.uk/provider/MHT01/fhir/STU3/careconnect/binary/ccp/5c954ec114e29c4a3102310e",
+    "errorEndpoint":"https://nrls.digital.nhs.uk/provider/MHT01/fhir/STU3/careconnect/binary/abc/5c954ec114e29c4a3102310e",
+    "fromAsid":"200000000116",
+    "toAsid":"200000000118",
+    "odsCode":"AMS01",
+    "userProfileId":"testUser123",
+    "sspInteractionId":"urn:nhs:names:services:nrl:DocumentReference.content.read"
+    "sspTraceId":"525f14e5-7a3b-497b-a986-85e7b1d60d70",
+    "sslClientCert":"/path/to/cert/file",
+    "sslClientKey":"/path/to/cert/key/file",
+    "sslClientPassphrase":"CERT_PASSPHRASE",
+    "sslCACert":"/path/to/root/ca/cert",
+    "sslInsecure": false,
+    "jwtOverride":{
+        "iss":"https://data.developer.nhs.uk/nrls-ri/",
+        "sub":"https://fhir.nhs.uk/Id/sds-role-profile-id|{roleProfileId}",
+        "aud":"https://nrls.digital.nhs.uk/",
+        "exp":1565035652,
+        "iat":1565035352,
+        "reason_for_request":"directcare",
+        "scope":"patient/*.read",
+        "requesting_system":"https://fhir.nhs.uk/Id/accredited-system|{fromASID}",
+        "requesting_organization":"https://fhir.nhs.uk/Id/ods-organization-code|{odsCode}",
+        "requesting_user": "https://fhir.nhs.uk/Id/sds-role-profile-id|{roleProfileId}"
+    }
+}

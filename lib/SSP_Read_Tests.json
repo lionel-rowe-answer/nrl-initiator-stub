@@ -1,0 +1,84 @@
+{
+	"info": {
+		"_postman_id": "2b0930cf-84f2-4d0b-b1fd-b69f8dd05dd0",
+		"name": "Provider SSP Read Interaction Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Success Scenario HTTP GET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f3c64986-2236-4532-834b-6769451899f2",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () { ",
+							"    pm.response.to.have.status(200); ",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has body greater than 0\", function () { ",
+							"    pm.expect(pm.response.responseSize).to.not.equal(0); ",
+							"});",
+							"",
+							"pm.test(\"Response has content-type header\", function () { ",
+							"   pm.response.to.have.header(\"Content-Type\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SUCCESS_URL}}",
+					"host": [
+						"{{SUCCESS_URL}}"
+					]
+				},
+				"description": "HTTP GET request to test Provider endpoint for SSP Read Interaction for NRL Record Retrieval."
+			},
+			"response": []
+		},
+		{
+			"name": "Error Scenario HTTP GET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f3c64986-2236-4532-834b-6769451899f2",
+						"exec": [
+							"pm.test(\"Error status code retuned\", function () { ",
+							"    pm.response.to.be.error;",
+							"});",
+							"",
+							"pm.test(\"Response has body greater than 0\", function () { ",
+							"    pm.expect(pm.response.responseSize).to.not.equal(0); ",
+							"});",
+							"",
+							"pm.test(\"Response has content-type header\", function () { ",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{ERROR_URL}}",
+					"host": [
+						"{{ERROR_URL}}"
+					]
+				},
+				"description": "HTTP GET request to test Provider endpoint for SSP Read Interaction for NRL Record Retrieval."
+			},
+			"response": []
+		}
+	]
+}

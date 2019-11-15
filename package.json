@@ -1,0 +1,18 @@
+{
+  "name": "nhsdigital-nrl-retrieval",
+  "version": "0.0.1",
+  "description": "NHS Digital NRL Record Retrieval Testing",
+  "main": "nrl-test-runner.bat",
+  "directories": {
+    "lib": "lib",
+    "reports": "reports",
+    "node_modules": "node_modules"
+  },
+  "author": "NHS Digital",
+  "license": "OGL",
+  "devDependencies": {
+    "newman": "4.5.4",
+    "newman-reporter-html": "1.0.3"
+  },
+  "dependencies": {}
+}
