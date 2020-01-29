@@ -1,127 +1,131 @@
-const {testRunnerHelper} = require('./lib/newman-test-runner');
-const {utilsHelper} = require('./lib/utilsHelper');
-const {configHelper} = require('./lib/configHelper');
+const { testRunnerHelper } = require('./lib/newman-test-runner');
+const { configHelper } = require('./lib/configHelper');
 
-let useCaCert = utilsHelper.validString(configHelper.config().sslCACert);
-let runningInsecure = useCaCert == false && configHelper.config().sslInsecure == true;
+const config = configHelper.config();
 
-let getDependencies = testRunnerHelper.checkDependencies();
+const useCaCert = !!config.sslCACert;
+const runningInsecure = useCaCert === false && config.sslInsecure === true;
 
-let stdin = process.stdin;
+const nodeVersion = process.versions.node;
+const [major, minor] = nodeVersion.split('.').map(n => parseInt(n, 10));
 
-stdin.setRawMode( true );
-stdin.resume();
-stdin.setEncoding( 'utf8' );
-
-if(runningInsecure){
-  process.stdout.write('\x1b[31mWARNING! App running in insecure mode, proceed with caution or exit the app.\x1b[0m');
+if (major > 10 || major < 7 || (major === 7 && minor < 3)) {
+    process.stdout.write(`\x1b[31mWARNING! Current Node.js version is ${nodeVersion}. Version 7.3.0 - 10.x.x required.\x1b[0m`);
 }
 
-process.stdout.write("\n");
+let getDependencies = testRunnerHelper.checkDependenciesRequired();
+
+const stdin = process.stdin;
+
+stdin.setRawMode(true);
+stdin.resume();
+stdin.setEncoding('utf8');
+
+if (runningInsecure) {
+    process.stdout.write('\x1b[31mWARNING! App running in insecure mode, proceed with caution or exit the app.\x1b[0m');
+}
+
+process.stdout.write('\n');
 process.stdout.write('\x1b[36m### Welcome to NRL Retrieval conformance test runner ###\x1b[0m');
-process.stdout.write("\n\n");
+process.stdout.write('\n\n');
 
-stdin.on( 'data', function( key ){
-  
-  process.stdout.clearLine();
-  process.stdout.cursorTo(0);
+const prompt = () => {
+    if (!getDependencies) {
+        process.stdout.write('\x1b[36mRun conformance tests? \x1b[33mPress y or n \x1b[0m');
+    } else {
+        process.stdout.write('\x1b[36mInstall test runner dependencies? \x1b[33mPress y or n \x1b[0m');
+    }
+};
 
-  if ( key === '\u0079' && getDependencies) {
-  
-    progressMessage.start("depInstaller", "Installing Dependencies", process.stdout);
+stdin.on('data', function (key) {
+    if (['y', 'Y', '\r', '\n'].includes(key)) {
+        process.stdout.clearLine();
+        process.stdout.cursorTo(0);
 
-    const exec = require('child_process').exec;
+        if (getDependencies) {
+            const { exec } = require('child_process');
+            
+            progressMessage.start('depInstaller', 'Installing Dependencies', process.stdout);
 
-    const child = exec('npm install --loglevel=error', (error, stdout, stderr) => {
+            exec('npm install --loglevel=error', (error, _stdout, stderr) => {
+                progressMessage.stop('depInstaller', process.stdout);
 
-        progressMessage.stop("depInstaller", process.stdout);
+                if (error || stderr) {
+                    process.stdout.write('\x1b[31mFailed to install dependencies. Conformance tests can\'t run.\x1b[0m');
+                    process.stdout.write('\n\n');
 
-        if (!utilsHelper.isNullOrEmpty(error) || !utilsHelper.isNullOrEmpty(stderr)) {
+                    process.exit();
+                }
 
-            process.stdout.write("\x1b[31mFailed to install dependencies. Conformance tests can't run.\x1b[0m");
-            process.stdout.write("\n\n");
+                getDependencies = false;
 
-            process.exit();
+                process.stdout.write('\x1b[32mDependencies installed ok. \x1b[36mRun conformance tests? \x1b[33mPress y or n \x1b[0m');
+
+            });
+        } else {
+            progressMessage.start('testRunner', 'Running conformance tests', process.stdout);
+
+            testRunnerHelper.run(() => {
+                progressMessage.stop('testRunner', process.stdout);
+            });
         }
+    } else if (['n', 'N', '\x1b' /* ESC */, '\x03' /* ^C */, '\x04' /* ^D */, '\x1a' /* ^Z */].includes(key)) {
+        process.stdout.clearLine();
+        process.stdout.cursorTo(0);
 
-        getDependencies = false;
+        const msgPrefix = getDependencies ? 'Installation skipped! ' : '';
 
-        process.stdout.write("\x1b[32mDependencies installed ok. \x1b[36mRun conformance tests? \x1b[33mPress y or n \x1b[0m");
- 
-    });
+        process.stdout.write('\x1b[31m' + msgPrefix + 'Conformance tests NOT run.\x1b[0m');
+        process.stdout.write('\n\n');
 
-  } else if ( key === '\u0079' && !getDependencies) {
-
-    progressMessage.start("testRunner", "Running conformance tests", process.stdout);
-
-    testRunnerHelper.run(() => {
-      progressMessage.stop("testRunner", process.stdout);
-    });
-
-  } else {
-
-    let mssgPrefix = getDependencies ? "Installation skipped! " : "";
-    process.stdout.write('\x1b[31m'+ mssgPrefix + 'Conformance tests NOT run.\x1b[0m');
-    process.stdout.write("\n\n");
-
-    process.exit();
-  }
-
+        process.exit();
+    } else {
+        console.log('\n');
+        prompt();
+    }
 });
 
+prompt();
 
-if(!getDependencies){
+const progressMessage = {
+    messages: [],
 
-  process.stdout.write("\x1b[36mRun conformance tests? \x1b[33mPress y or n \x1b[0m");
+    start: function (key, text, std) {
+        const PROGRESS_BAR_LENGTH = 20;
 
-} else {
-  
-  process.stdout.write('\x1b[36mInstall test runner dependencies? \x1b[33mPress y or n \x1b[0m');
-}
+        const msg = {
+            text,
+            progress: 1,
+        };
 
+        msg.interval = setInterval(() => {
+            const msgPadding = '.'.repeat(msg.progress);
 
-let progressMessage = {
+            std.clearLine();
+            std.cursorTo(0);
+            std.write('\x1b[35m' + msg.text + '\x1b[33m' + msgPadding + '\x1b[0m');
 
-    messages:[],
+            msg.progress++;
 
-    start: function(key, message, std) {
+            if (msg.progress > PROGRESS_BAR_LENGTH) {
+                msg.progress = 0;
+            }
 
-      let mssgIntv = {
-        progress: 1,
-        message: message,
-        intv: null
-      };
-      
-      mssgIntv.intv = setInterval(() => { 
+        }, 500);
 
-        let padding = "....................";
-        let mssgPadding = String(padding).slice(-1 * mssgIntv.progress); 
+        this.messages[key] = msg;
+    },
+
+    stop: function (key, std) {
+        const { interval } = this.messages[key];
+
+        clearInterval(interval);
 
         std.clearLine();
         std.cursorTo(0);
-        std.write('\x1b[35m' + mssgIntv.message + '\x1b[33m' + mssgPadding + '\x1b[0m');     
-  
-        mssgIntv.progress++; 
 
-        if(mssgIntv.progress > padding.length){
-          mssgIntv.progress = 0;
-        }
-      
-      }, 500);
-
-      this.messages[key] = mssgIntv;
+        delete this.messages[key];
     },
-
-    stop: function(key, std){
-
-      let mssgIntv = this.messages[key].intv;
-      clearInterval(mssgIntv);
-
-      std.clearLine();
-      std.cursorTo(0);
-
-      delete this.messages[key];
-    }
 };
 
 //more colours at: https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color

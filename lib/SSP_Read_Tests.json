@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "2b0930cf-84f2-4d0b-b1fd-b69f8dd05dd0",
-		"name": "Provider SSP Read Interaction Test",
+        "name": "Provider SSP Read Interaction Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -13,16 +13,16 @@
 					"script": {
 						"id": "f3c64986-2236-4532-834b-6769451899f2",
 						"exec": [
-							"pm.test(\"Status code is 200\", function () { ",
+							"pm.test(\"Status code is 200\", () => { ",
 							"    pm.response.to.have.status(200); ",
 							"});",
 							"",
 							"",
-							"pm.test(\"Response has body greater than 0\", function () { ",
+							"pm.test(\"Response has body greater than 0\", () => { ",
 							"    pm.expect(pm.response.responseSize).to.not.equal(0); ",
 							"});",
 							"",
-							"pm.test(\"Response has content-type header\", function () { ",
+							"pm.test(\"Response has content-type header\", () => { ",
 							"   pm.response.to.have.header(\"Content-Type\");",
 							"});"
 						],
@@ -51,15 +51,15 @@
 					"script": {
 						"id": "f3c64986-2236-4532-834b-6769451899f2",
 						"exec": [
-							"pm.test(\"Error status code retuned\", function () { ",
+							"pm.test(\"Error status code retuned\", () => { ",
 							"    pm.response.to.be.error;",
 							"});",
 							"",
-							"pm.test(\"Response has body greater than 0\", function () { ",
+							"pm.test(\"Response has body greater than 0\", () => { ",
 							"    pm.expect(pm.response.responseSize).to.not.equal(0); ",
 							"});",
 							"",
-							"pm.test(\"Response has content-type header\", function () { ",
+							"pm.test(\"Response has content-type header\", () => { ",
 							"    pm.response.to.have.header(\"Content-Type\");",
 							"});"
 						],

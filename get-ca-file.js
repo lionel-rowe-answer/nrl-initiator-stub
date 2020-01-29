@@ -1,12 +1,11 @@
-const {configHelper} = require('./lib/configHelper');
-const {utilsHelper} = require('./lib/utilsHelper');
+const { configHelper } = require('./lib/configHelper');
 
-let sslCACert = configHelper.config().sslCACert;
-let sslClientCert = configHelper.config().sslClientCert;
+const { sslCACert, sslClientCert } = configHelper.config();
 
-if(utilsHelper.validString(sslCACert) && utilsHelper.validString(sslClientCert)){
-  process.stdout.write(sslCACert);
-}else{
-  process.stdout.write("null");
+if (sslCACert && sslClientCert) {
+    process.stdout.write(sslCACert);
+} else {
+    process.stdout.write('null');
 }
+
 process.exit();
