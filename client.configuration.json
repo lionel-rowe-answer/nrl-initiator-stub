@@ -1,14 +1,14 @@
 {
-    "successEndpoint": "https://localhost:5000/https%3A%2F%2Fprovider1.example.com%2Fapi%2Fpatients%2F1%2Frecords%2Fsample.json",
-    "errorEndpoint":"https://localhost:5000/fdklkjshdkhkabjhhhhhhhhkasaklf",
-    "fromAsid":"200000000116",
-    "toAsid":"200000000118",
-    "odsCode":"AMS01",
-    "userProfileId":"testUser123",
-    "sspInteractionId":"urn:nhs:names:services:nrl:DocumentReference.content.read",
-    "sslClientCert":"C:/certs/alice_cert.pem",
-    "sslClientKey":"C:/certs/alice_key.pem",
-    "sslClientPassphrase":"CERT_PASSWORD",
-    "sslCACert":"C:/certs/server_cert.pem",
-    "sslInsecure": false
+    "successEndpoint": "https://data.developer.nhs.uk/nrls-ri/SSP/http%3A%2F%2Fnrlsdemoapp%3A5000%2Fprovider%2FMHT01%2Ffhir%2FSTU3%2Fcareconnect%2Fbinary%2Fccp%2F5c954ec114e29c4a3102310e",
+    "errorEndpoint": "https://data.developer.nhs.uk/nrls-ri/SSP/http%3A%2F%2Fnrlsdemoapp%3A5000%2Fprovider%2FMHT01%2Ffhir%2FSTU3%2Fcareconnect%2Fbinary%2Fabc%2F5c954ec114e29c4a3102310e",
+    "fromAsid": "200000000116",
+    "toAsid": "200000000118",
+    "odsCode": "AMS01",
+    "userProfileId": "testUser123",
+    "sspInteractionId": "urn:nhs:names:services:nrl:DocumentReference.content.read",
+    "sslClientCert": "path/to/cert",
+    "sslClientKey": "path/to/cert/private/key",
+    "sslClientPassphrase": "CERT_PASSWORD",
+    "sslCACert": "path/to/full/trust/chain/ca/root/cert",
+    "sslInsecure": true
 }

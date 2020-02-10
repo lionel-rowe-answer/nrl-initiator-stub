@@ -1,8 +1,8 @@
 const { configHelper } = require('./lib/configHelper');
 
-const { sslCACert, sslClientCert } = configHelper.config();
+const { sslInsecure, sslCACert, sslClientCert } = configHelper.config();
 
-if (sslCACert && sslClientCert) {
+if (!sslInsecure && sslCACert && sslClientCert) {
     process.stdout.write(sslCACert);
 } else {
     process.stdout.write('null');

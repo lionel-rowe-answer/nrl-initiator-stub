@@ -3,8 +3,8 @@ const { configHelper } = require('./lib/configHelper');
 
 const config = configHelper.config();
 
-const useCaCert = !!config.sslCACert;
-const runningInsecure = useCaCert === false && config.sslInsecure === true;
+const { sslInsecure, sslCACert } = config;
+const runningInsecure = sslInsecure || !sslCACert;
 
 const nodeVersion = process.versions.node;
 const [major, minor] = nodeVersion.split('.').map(n => parseInt(n, 10));
@@ -22,7 +22,7 @@ stdin.resume();
 stdin.setEncoding('utf8');
 
 if (runningInsecure) {
-    process.stdout.write('\x1b[31mWARNING! App running in insecure mode, proceed with caution or exit the app.\x1b[0m');
+    process.stdout.write('\x1b[31mWARNING! App running in insecure mode. Proceed with caution or exit the app.\x1b[0m');
 }
 
 process.stdout.write('\n');
@@ -37,8 +37,20 @@ const prompt = () => {
     }
 };
 
-stdin.on('data', function (key) {
-    if (['y', 'Y', '\r', '\n'].includes(key)) {
+// key codes
+const CARRIAGE_RETURN = '\r',
+            LINE_FEED = '\n',
+              ESC_KEY = '\x1b',
+               CTRL_C = '\x03',
+               CTRL_D = '\x04',
+               CTRL_Z = '\x1a';
+
+const isYesOrContinue = key => ['y', 'Y', CARRIAGE_RETURN, LINE_FEED].includes(key);
+
+const isNoOrExit = key => ['n', 'N', ESC_KEY, CTRL_C, CTRL_D, CTRL_Z].includes(key);
+
+stdin.on('data', key => {
+    if (isYesOrContinue(key)) {
         process.stdout.clearLine();
         process.stdout.cursorTo(0);
 
@@ -69,7 +81,7 @@ stdin.on('data', function (key) {
                 progressMessage.stop('testRunner', process.stdout);
             });
         }
-    } else if (['n', 'N', '\x1b' /* ESC */, '\x03' /* ^C */, '\x04' /* ^D */, '\x1a' /* ^Z */].includes(key)) {
+    } else if (isNoOrExit(key)) {
         process.stdout.clearLine();
         process.stdout.cursorTo(0);
 
