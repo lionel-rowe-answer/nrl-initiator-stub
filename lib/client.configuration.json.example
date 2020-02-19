@@ -12,6 +12,7 @@
     "sslClientPassphrase": "CERT_PASSPHRASE",
     "sslCACert": "/path/to/root/ca/cert",
     "sslInsecure": false,
+    "saveResponsesToFile": false,
     "jwtOverride": {
         "iss": "https://data.developer.nhs.uk/nrls-ri/",
         "sub": "https://fhir.nhs.uk/Id/sds-role-profile-id|<insert role profile ID here>",

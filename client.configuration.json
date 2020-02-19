@@ -10,5 +10,6 @@
     "sslClientKey": "path/to/cert/private/key",
     "sslClientPassphrase": "CERT_PASSWORD",
     "sslCACert": "path/to/full/trust/chain/ca/root/cert",
-    "sslInsecure": true
+    "sslInsecure": true,
+    "saveResponsesToFile": false
 }
