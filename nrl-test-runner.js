@@ -87,7 +87,7 @@ stdin.on('data', key => {
 
         const msgPrefix = getDependencies ? 'Installation skipped! ' : '';
 
-        process.stdout.write('\x1b[31m' + msgPrefix + 'Conformance tests NOT run.\x1b[0m');
+        process.stdout.write(`\x1b[31m${msgPrefix}Conformance tests NOT run.\x1b[0m`);
         process.stdout.write('\n\n');
 
         process.exit();
@@ -115,7 +115,7 @@ const progressMessage = {
 
             std.clearLine();
             std.cursorTo(0);
-            std.write('\x1b[35m' + msg.text + '\x1b[33m' + msgPadding + '\x1b[0m');
+            std.write(`\x1b[35m${msg.text}\x1b[33m${msgPadding}\x1b[0m`);
 
             msg.progress++;
 
