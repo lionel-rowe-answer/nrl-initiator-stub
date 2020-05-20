@@ -11,7 +11,7 @@
   "author": "NHS Digital",
   "license": "OGL",
   "devDependencies": {
-    "newman": "^4.5.7",
+    "newman": "^5.0.1",
     "newman-reporter-html": "^1.0.5"
   },
   "dependencies": {}
